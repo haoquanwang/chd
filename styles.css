@@ -467,6 +467,19 @@ body {
     border-radius: 12px;
 }
 
+.contact-map {
+    background: var(--bg-light);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.contact-map iframe {
+    display: block;
+    width: 100%;
+    min-height: 400px;
+}
+
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -578,6 +591,10 @@ body {
     .contact-content {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+
+    .contact-map {
+        order: -1;
     }
 
     .trust-badges {
