@@ -419,6 +419,28 @@ body {
     color: var(--primary-color);
 }
 
+.news-loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-light);
+    font-size: 1.125rem;
+}
+
+.news-error {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.news-source {
+    color: var(--secondary-color) !important;
+    font-size: 0.8125rem !important;
+    font-weight: 600;
+    margin-bottom: 0.5rem !important;
+    text-transform: uppercase;
+}
+
 /* Contact Section */
 .contact-content {
     display: grid;
