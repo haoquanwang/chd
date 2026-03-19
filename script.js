@@ -143,16 +143,12 @@ window.addEventListener('scroll', () => {
 // RSS Feed Loading
 const RSS_FEEDS = [
     {
-        url: 'https://www.govwire.co.uk/rss/hm-revenue-customs',
-        title: 'HM Revenue & Customs'
-    },
-    {
         url: 'https://www.govwire.co.uk/rss/government-internal-audit-agency',
         title: 'Government Internal Audit Agency'
     },
     {
-        url: 'https://www.govwire.co.uk/rss/government-tax-profession',
-        title: 'Government Tax Profession'
+        url: 'https://www.govwire.co.uk/rss/hm-treasury',
+        title: 'HM Treasury'
     }
 ];
 
@@ -210,19 +206,30 @@ async function loadRSSFeeds() {
     const allItems = [];
 
     try {
+        console.log('Fetching RSS feeds...');
+
         // Fetch all feeds in parallel
         const feedPromises = RSS_FEEDS.map(feed => fetchRSSFeed(feed.url));
         const feedResults = await Promise.all(feedPromises);
 
-        // Combine all items from all feeds
+        console.log('Feed results:', feedResults);
+
+        // Combine all items from all feeds (limit to 6 items per feed)
         feedResults.forEach((result, index) => {
+            console.log(`Processing feed ${index}: ${RSS_FEEDS[index].title}`, result);
             if (result && result.status === 'ok' && result.items) {
                 const source = RSS_FEEDS[index].title;
-                result.items.forEach(item => {
+                const limitedItems = result.items.slice(0, 6);
+                console.log(`Adding ${limitedItems.length} items from ${source}`);
+                limitedItems.forEach(item => {
                     allItems.push({ ...item, source });
                 });
+            } else {
+                console.warn(`Feed ${RSS_FEEDS[index].title} returned no items or error:`, result);
             }
         });
+
+        console.log(`Total items collected: ${allItems.length}`);
 
         if (allItems.length === 0) {
             newsGrid.innerHTML = '<p class="news-error">Unable to load news at this time. Please try again later.</p>';
@@ -236,8 +243,10 @@ async function loadRSSFeeds() {
             return dateB - dateA;
         });
 
-        // Limit to 8 most recent items
-        const recentItems = allItems.slice(0, 8);
+        // Display all items (up to 12 total - 6 from each feed)
+        const recentItems = allItems.slice(0, 12);
+
+        console.log(`Displaying ${recentItems.length} items`);
 
         // Generate HTML
         const newsHTML = recentItems.map(item => createNewsCard(item, item.source)).join('');
